@@ -40,4 +40,11 @@ public class UserTransactionClient {
         Optional<UserTransaction> response = Optional.ofNullable(restTemplate.getForObject(url, UserTransaction.class));
         return response.orElse(new UserTransaction());
     }
+
+    public UserTransaction buyCrypto(UserTransaction userTransaction){
+        URI url = UriComponentsBuilder
+                .fromHttpUrl(config.getBackApi() + "/user/transactions/buy")
+                .build().encode().toUri();
+        return restTemplate.postForObject(url, userTransaction,UserTransaction.class);
+    }
 }

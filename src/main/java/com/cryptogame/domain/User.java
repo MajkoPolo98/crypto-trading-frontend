@@ -1,22 +1,20 @@
 package com.cryptogame.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Map;
 
 @Getter
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
 
     private Long id;
 
-    private String userName;
+    private String name;
 
     private String email;
 
@@ -29,4 +27,12 @@ public class User {
     private String group_name;
 
     private Map<String, BigDecimal> crypto;
+
+    public User(String userName, String email, String password, boolean adminStatus, BigDecimal money) {
+        this.name = userName;
+        this.email = email;
+        this.password = password;
+        this.adminStatus = adminStatus;
+        this.money = money;
+    }
 }

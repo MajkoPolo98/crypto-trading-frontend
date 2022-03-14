@@ -9,6 +9,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.*;
 
@@ -53,6 +54,13 @@ public class UserClient {
         } else {
             return false;
         }
+    }
+
+    public User createUser(User user){
+        URI url = UriComponentsBuilder
+                .fromHttpUrl(config.getBackApi() + "/user")
+                .build().encode().toUri();
+        return restTemplate.postForObject(url, user, User.class);
     }
 
 }

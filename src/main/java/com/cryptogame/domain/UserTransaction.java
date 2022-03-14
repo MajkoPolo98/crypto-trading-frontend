@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -19,11 +20,18 @@ public class UserTransaction {
 
     private LocalDate transactionDate;
 
-    private String cryptoSymbol;
+    private String crypto_symbol;
 
-    private String cryptoAmount;
+    private String crypto_amount;
 
-    private String money;
+    private BigDecimal money;
 
-    private String worthNow;
+    private BigDecimal worthNow;
+
+    public UserTransaction(Long user_id, String crypto_symbol, String crypto_amount, BigDecimal money) {
+        this.user_id = user_id;
+        this.crypto_symbol = crypto_symbol;
+        this.crypto_amount = crypto_amount;
+        this.money = money;
+    }
 }

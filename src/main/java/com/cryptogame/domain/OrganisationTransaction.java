@@ -29,4 +29,11 @@ public class OrganisationTransaction {
     private BigDecimal money;
 
     private BigDecimal worthNow;
+
+    public OrganisationTransaction(String organisation_name, String cryptoSymbol, BigDecimal cryptoAmount, BigDecimal money) {
+        this.organisation_name = organisation_name;
+        this.cryptoSymbol = cryptoSymbol;
+        this.cryptoAmount = cryptoAmount;
+        this.money = money;
+    }
 }
