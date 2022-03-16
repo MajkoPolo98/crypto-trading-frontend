@@ -34,9 +34,10 @@ public class MainView extends VerticalLayout {
         Grid<Coin> grid = new Grid<>(Coin.class);
         grid.setColumns("symbol", "name", "price");
         grid.addComponentColumn(coin -> {
+            setAlignItems(Alignment.CENTER);
             Image image = new Image(coin.getLogo_url(), "coin image");
-            image.setHeight(20, Unit.PERCENTAGE);
-            image.setHeight(20, Unit.PERCENTAGE);
+            image.setHeight(200, Unit.PIXELS);
+            image.setHeight(200, Unit.PIXELS);
             return image;
         }).setHeader("image");
         grid.addComponentColumn(coin -> buyForUser(coin, userTransactionClient)).setHeader("Buy crypto for yourself");
@@ -63,8 +64,7 @@ public class MainView extends VerticalLayout {
     private VerticalLayout buyFoOrganisation(Coin coin, OrganisationTransactionClient organisationTransactionClient){
         VerticalLayout layout = new VerticalLayout();
         TextField money = new TextField("money");
-        User loggedUser = VaadinSession.getCurrent().getAttribute(User.class);
-        String grouoName = loggedUser.getGroup_name();
+        String grouoName = VaadinSession.getCurrent().getAttribute(User.class).getGroup_name();
         Button buy = new Button("Buy crypto", event -> {
             OrganisationTransaction transaction = new OrganisationTransaction(grouoName, coin.getSymbol(), null, new BigDecimal(money.getValue()));
             organisationTransactionClient.buyCrypto(transaction);

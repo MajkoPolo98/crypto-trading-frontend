@@ -15,7 +15,7 @@ import com.vaadin.flow.router.RouterLink;
 public class LoginView extends VerticalLayout {
 
     public LoginView(UserClient userClient) {
-        //setId("login-view");
+        setAlignItems(Alignment.CENTER);
         var username = new TextField("Username");
         var password = new PasswordField("Password");
         add(

@@ -1,6 +1,7 @@
 package com.cryptogame.client.user;
 
 import com.cryptogame.client.FrontEndConfig;
+import com.cryptogame.domain.Organisation;
 import com.cryptogame.domain.User;
 import com.vaadin.flow.server.VaadinSession;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,14 @@ public class UserClient {
         return response.orElse(new User());
     }
 
+    public User getUserByName(String userName){
+        URI url = UriComponentsBuilder
+                .fromHttpUrl(config.getBackApi() + "/user/find/"+userName)
+                .build().encode().toUri();
+        Optional<User> response = Optional.ofNullable(restTemplate.getForObject(url, User.class));
+        return response.orElse(new User());
+    }
+
     public boolean authenticate(String username, String password){
         URI url = UriComponentsBuilder
                 .fromHttpUrl(config.getBackApi() + "/user/find/"+username)
@@ -62,5 +71,14 @@ public class UserClient {
                 .build().encode().toUri();
         return restTemplate.postForObject(url, user, User.class);
     }
+
+    public void joinOrganisation(Organisation organisation){
+        User loggedUser = VaadinSession.getCurrent().getAttribute(User.class);
+        URI url = UriComponentsBuilder
+                .fromHttpUrl(config.getBackApi() + "/user/" + loggedUser.getId() + "/organisation/"+ organisation.getId())
+                .build().encode().toUri();
+        restTemplate.put(url, Organisation.class);
+    }
+
 
 }

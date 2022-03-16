@@ -40,4 +40,11 @@ public class OrganisationClient {
         Optional<Organisation> response = Optional.ofNullable(restTemplate.getForObject(url, Organisation.class));
         return response.orElse(new Organisation());
     }
+
+    public Organisation createOrganisation(Organisation organisation){
+        URI url = UriComponentsBuilder
+                .fromHttpUrl(config.getBackApi() + "/organisation/")
+                .build().encode().toUri();
+        return restTemplate.postForObject(url, organisation, Organisation.class);
+    }
 }
