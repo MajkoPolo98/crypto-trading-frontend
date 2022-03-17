@@ -18,7 +18,7 @@ public class UserTransactionClient {
     private final RestTemplate restTemplate;
     private final FrontEndConfig config;
 
-    public List<UserTransaction> getUserTransactions(){
+    public List<UserTransaction> getAllTransactions(){
         URI url = UriComponentsBuilder
                 .fromHttpUrl(config.getBackApi() + "/user/transactions")
                 .build().encode().toUri();
@@ -33,7 +33,22 @@ public class UserTransactionClient {
         }
     }
 
-    public UserTransaction getUserTransaction(Long userTransactionId){
+    public List<UserTransaction> getUserTransactions(Long userId){
+        URI url = UriComponentsBuilder
+                .fromHttpUrl(config.getBackApi() + "/user/"+userId+"/transactions")
+                .build().encode().toUri();
+
+        try {
+            UserTransaction[] response = restTemplate.getForObject(url, UserTransaction[].class);
+            return new ArrayList<>(Optional.ofNullable(response)
+                    .map(Arrays::asList)
+                    .orElse(Collections.emptyList()));
+        } catch (RestClientException e){
+            return Collections.emptyList();
+        }
+    }
+
+    public UserTransaction getTransaction(Long userTransactionId){
         URI url = UriComponentsBuilder
                 .fromHttpUrl(config.getBackApi() + "/user/transactions/"+userTransactionId)
                 .build().encode().toUri();
@@ -44,6 +59,13 @@ public class UserTransactionClient {
     public UserTransaction buyCrypto(UserTransaction userTransaction){
         URI url = UriComponentsBuilder
                 .fromHttpUrl(config.getBackApi() + "/user/transactions/buy")
+                .build().encode().toUri();
+        return restTemplate.postForObject(url, userTransaction,UserTransaction.class);
+    }
+
+    public UserTransaction sellCrypto(UserTransaction userTransaction){
+        URI url = UriComponentsBuilder
+                .fromHttpUrl(config.getBackApi() + "/user/transactions/sell")
                 .build().encode().toUri();
         return restTemplate.postForObject(url, userTransaction,UserTransaction.class);
     }

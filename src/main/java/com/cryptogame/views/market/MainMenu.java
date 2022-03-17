@@ -35,7 +35,6 @@ public class MainMenu extends VerticalLayout {
         VerticalLayout layout = new VerticalLayout();
         MenuBar menuBar = new MenuBar();
         Text selected = new Text("");
-        ComponentEventListener<ClickEvent<MenuItem>> listener = e -> selected.setText(e.getSource().getText());
 
         menuBar.addItem("Market", event -> UI.getCurrent().navigate("Market"));
 

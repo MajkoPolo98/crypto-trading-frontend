@@ -3,6 +3,7 @@ package com.cryptogame.client.coin;
 import com.cryptogame.client.FrontEndConfig;
 import com.cryptogame.domain.Coin;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -39,5 +40,13 @@ public class CoinClient {
                 .build().encode().toUri();
         Optional<Coin> response = Optional.ofNullable(restTemplate.getForObject(url, Coin.class));
         return response.orElse(new Coin());
+    }
+
+    public List<Coin> getSelectedCoins(List<String> symbols){
+        URI url = UriComponentsBuilder
+                .fromHttpUrl(config.getBackApi() + "/stock")
+                .build().encode().toUri();
+        Optional<ArrayList<Coin>> response = Optional.ofNullable(restTemplate.postForObject(url, symbols, ArrayList.class));
+        return response.orElse(new ArrayList<>());
     }
 }

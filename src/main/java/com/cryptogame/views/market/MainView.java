@@ -1,7 +1,6 @@
 package com.cryptogame.views.market;
 
 import com.cryptogame.client.coin.CoinClient;
-import com.cryptogame.client.organisation.OrganisationClient;
 import com.cryptogame.client.organisation.OrganisationTransactionClient;
 import com.cryptogame.client.user.UserTransactionClient;
 import com.cryptogame.domain.*;
@@ -14,8 +13,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,7 +22,6 @@ public class MainView extends VerticalLayout {
 
 
     private MainMenu mainMenu = new MainMenu();
-    private Grid<Coin> grid = new Grid<>(Coin.class);
 
     public MainView(CoinClient coinClient, UserTransactionClient userTransactionClient) {
         setAlignItems(Alignment.CENTER);
