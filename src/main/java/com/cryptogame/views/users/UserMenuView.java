@@ -32,13 +32,10 @@ public class UserMenuView extends VerticalLayout {
     public UserMenuView(UserClient userClient, UserTransactionClient userTransactionClient, CoinClient coinClient){
 
         MainMenu menu = new MainMenu();
-        add(menu.createMenuBar());
+        add(menu.createMenuBar(userClient));
 
         Long userId = VaadinSession.getCurrent().getAttribute(User.class).getId();
         User user = userClient.getUser(userId);
-
-/*        List<String> userCoinsSymbols = user.getWallet().keySet().stream().collect(Collectors.toList());
-        List<Coin> userCoins = coinClient.getSelectedCoins(userCoinsSymbols);*/
 
         Map<String, BigDecimal> userCoinMap = user.getWallet();
 
@@ -48,14 +45,11 @@ public class UserMenuView extends VerticalLayout {
         Text text = new Text("Wallet");
         add(text);
 
-        Text text2 = new Text("Wallet");
-        add(text2);
-
         Grid<CryptoInWallet> walletGrid = new Grid<>();
         walletGrid.addColumn(CryptoInWallet::getSymbol).setHeader("Symbol");
         walletGrid.addColumn(CryptoInWallet::getAmount).setHeader("Amount owned");
         walletGrid.addColumn(crypto -> userCoinMap.get(crypto.getSymbol())).setHeader("Crypto price");
-        walletGrid.addComponentColumn(crypto -> sellForUser(crypto.getSymbol(), userTransactionClient));
+        walletGrid.addComponentColumn(crypto -> sellForUser(crypto.getSymbol(), userClient, userTransactionClient));
         walletGrid.setItems(user.crypto());
         add(walletGrid);
 
@@ -72,11 +66,11 @@ public class UserMenuView extends VerticalLayout {
         add(transactionGrid);
     }
 
-    private VerticalLayout sellForUser(String symbol, UserTransactionClient userTransactionClient){
+    private VerticalLayout sellForUser(String symbol, UserClient userClient, UserTransactionClient userTransactionClient){
 
         VerticalLayout layout = new VerticalLayout();
         TextField cryptoAmount = new TextField("crypto amount");
-        User loggedUser = VaadinSession.getCurrent().getAttribute(User.class);
+        User loggedUser = userClient.getUser(VaadinSession.getCurrent().getAttribute(User.class).getId());
         Button buy = new Button("Sell crypto", event -> {
             UserTransaction transaction = new UserTransaction(loggedUser.getId(), symbol, new BigDecimal(cryptoAmount.getValue()), null);
             userTransactionClient.sellCrypto(transaction);

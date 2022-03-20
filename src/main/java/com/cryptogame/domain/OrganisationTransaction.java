@@ -20,20 +20,21 @@ public class OrganisationTransaction {
 
     private String organisation_name;
 
-    private LocalDate transactionDate;
+    private LocalDate transaction_date;
 
-    private String cryptoSymbol;
+    private String crypto_symbol;
 
-    private BigDecimal cryptoAmount;
+    private BigDecimal crypto_amount;
 
     private BigDecimal money;
 
-    private BigDecimal worthNow;
+    private BigDecimal worth_now;
 
-    public OrganisationTransaction(String organisation_name, String cryptoSymbol, BigDecimal cryptoAmount, BigDecimal money) {
+    public OrganisationTransaction(Long user_id, String organisation_name, String crypto_symbol, BigDecimal crypto_amount, BigDecimal money) {
+        this.user_id = user_id;
         this.organisation_name = organisation_name;
-        this.cryptoSymbol = cryptoSymbol;
-        this.cryptoAmount = cryptoAmount;
+        this.crypto_symbol = crypto_symbol;
+        this.crypto_amount = crypto_amount;
         this.money = money;
     }
 }

@@ -1,6 +1,7 @@
 package com.cryptogame.views.organisations;
 
 import com.cryptogame.client.organisation.OrganisationClient;
+import com.cryptogame.client.user.UserClient;
 import com.cryptogame.domain.Organisation;
 import com.cryptogame.domain.User;
 import com.cryptogame.views.market.MainMenu;
@@ -19,13 +20,13 @@ import java.util.Arrays;
 
 @Route("organisation/creator")
 public class OrganisationCreatorView extends VerticalLayout {
-    public OrganisationCreatorView(OrganisationClient organisationClient) {
+    public OrganisationCreatorView(OrganisationClient organisationClient, UserClient userClient) {
         TextField username = new TextField("Username");
 
         MainMenu menu = new MainMenu();
 
         add(
-                menu.createMenuBar(),
+                menu.createMenuBar(userClient),
 
                 new H1("Create organisation"),
                 username,

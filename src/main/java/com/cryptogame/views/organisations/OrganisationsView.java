@@ -35,7 +35,7 @@ public class OrganisationsView extends VerticalLayout {
 
         organisationGrid.setItems(organisationClient.getOrganisations());
 
-        add(menu.createMenuBar(),
+        add(menu.createMenuBar(userClient),
                 organisationGrid,
                 button);
     }

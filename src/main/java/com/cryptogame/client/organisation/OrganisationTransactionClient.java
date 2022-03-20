@@ -19,9 +19,9 @@ public class OrganisationTransactionClient {
     private final RestTemplate restTemplate;
     private final FrontEndConfig config;
 
-    public List<OrganisationTransaction> getOrganisationTransactions(){
+    public List<OrganisationTransaction> getOrganisationTransactions(Long organisationId){
         URI url = UriComponentsBuilder
-                .fromHttpUrl(config.getBackApi() + "/organisation/transactions")
+                .fromHttpUrl(config.getBackApi() + "/organisation/"+ organisationId + "/transactions")
                 .build().encode().toUri();
 
         try {
@@ -45,6 +45,13 @@ public class OrganisationTransactionClient {
     public OrganisationTransaction buyCrypto(OrganisationTransaction organisationTransaction){
         URI url = UriComponentsBuilder
                 .fromHttpUrl(config.getBackApi() + "/organisation/transactions/buy")
+                .build().encode().toUri();
+        return restTemplate.postForObject(url, organisationTransaction,OrganisationTransaction.class);
+    }
+
+    public OrganisationTransaction sellCrypto(OrganisationTransaction organisationTransaction){
+        URI url = UriComponentsBuilder
+                .fromHttpUrl(config.getBackApi() + "/organisation/transactions/sell")
                 .build().encode().toUri();
         return restTemplate.postForObject(url, organisationTransaction,OrganisationTransaction.class);
     }

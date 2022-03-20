@@ -24,7 +24,7 @@ public class UsersView extends VerticalLayout {
 
         grid.setItems(userClient.getUsers());
 
-        add(menu.createMenuBar(),
+        add(menu.createMenuBar(userClient),
                 grid);
     }
 }

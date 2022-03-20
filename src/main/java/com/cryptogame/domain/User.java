@@ -28,7 +28,7 @@ public class User {
 
     private BigDecimal value;
 
-    private String group_name;
+    private String group_name = null;
 
     private Map<String, BigDecimal> wallet;
 

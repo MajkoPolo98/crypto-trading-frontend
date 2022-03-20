@@ -1,5 +1,6 @@
 package com.cryptogame.views.market;
 
+import com.cryptogame.client.user.UserClient;
 import com.cryptogame.domain.User;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -30,7 +31,7 @@ public class MainMenu extends VerticalLayout {
         return new Button(text, event -> UI.getCurrent().navigate(destination));
     }
 
-    public VerticalLayout createMenuBar(){
+    public VerticalLayout createMenuBar(UserClient userClient){
         setAlignItems(Alignment.CENTER);
         VerticalLayout layout = new VerticalLayout();
         MenuBar menuBar = new MenuBar();
@@ -46,7 +47,9 @@ public class MainMenu extends VerticalLayout {
         MenuItem organisation = menuBar.addItem("Organisation");
         SubMenu organisationSubMenu = organisation.getSubMenu();
         organisationSubMenu.addItem("All organisations", event -> UI.getCurrent().navigate("organisation"));
-        organisationSubMenu.addItem("Organisation menu", event -> UI.getCurrent().navigate("organisation/menu"));
+        if(userClient.getUser(VaadinSession.getCurrent().getAttribute(User.class).getId()).getGroup_name() != null){
+            organisationSubMenu.addItem("Organisation menu", event -> UI.getCurrent().navigate("organisation/menu"));
+        }
 
         MenuItem logOut = menuBar.addItem("Log out", event -> {
             VaadinSession.getCurrent().setAttribute(User.class, null);

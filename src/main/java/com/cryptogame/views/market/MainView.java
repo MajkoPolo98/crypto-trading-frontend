@@ -2,6 +2,7 @@ package com.cryptogame.views.market;
 
 import com.cryptogame.client.coin.CoinClient;
 import com.cryptogame.client.organisation.OrganisationTransactionClient;
+import com.cryptogame.client.user.UserClient;
 import com.cryptogame.client.user.UserTransactionClient;
 import com.cryptogame.domain.*;
 import com.vaadin.flow.component.Unit;
@@ -23,11 +24,12 @@ public class MainView extends VerticalLayout {
 
     private MainMenu mainMenu = new MainMenu();
 
-    public MainView(CoinClient coinClient, UserTransactionClient userTransactionClient) {
+    public MainView(CoinClient coinClient, UserClient userClient, UserTransactionClient userTransactionClient, OrganisationTransactionClient organisationTransactionClient) {
         setAlignItems(Alignment.CENTER);
-        add(mainMenu.createMenuBar());
+        add(mainMenu.createMenuBar(userClient));
 
         Grid<Coin> grid = new Grid<>(Coin.class);
+
         grid.setColumns("symbol", "name", "price");
         grid.addComponentColumn(coin -> {
             setAlignItems(Alignment.CENTER);
@@ -37,6 +39,9 @@ public class MainView extends VerticalLayout {
             return image;
         }).setHeader("image");
         grid.addComponentColumn(coin -> buyForUser(coin, userTransactionClient)).setHeader("Buy crypto for yourself");
+        if(userClient.getUser(VaadinSession.getCurrent().getAttribute(User.class).getId()).getGroup_name() != null){
+            grid.addComponentColumn(coin -> buyFoOrganisation(coin, userClient, organisationTransactionClient)).setHeader("Buy crypto for organisation");
+        }
 
         List<Coin> coinList = coinClient.getCoins();
         grid.setItems(coinList);
@@ -49,22 +54,30 @@ public class MainView extends VerticalLayout {
         TextField money = new TextField("money");
         User loggedUser = VaadinSession.getCurrent().getAttribute(User.class);
         Button buy = new Button("Buy crypto", event -> {
-            UserTransaction transaction = new UserTransaction(loggedUser.getId(), coin.getSymbol(), null, new BigDecimal(money.getValue()));
-            userTransactionClient.buyCrypto(transaction);
-            Notification.show("Crypto bought!");
+            try {
+                UserTransaction transaction = new UserTransaction(loggedUser.getId(), coin.getSymbol(), null, new BigDecimal(money.getValue()));
+                userTransactionClient.buyCrypto(transaction);
+                Notification.show("Crypto bought!");
+            } catch (Exception e) {
+                Notification.show("Something went wrong");
+            }
         });
         layout.add(money, buy);
         return layout;
     }
 
-    private VerticalLayout buyFoOrganisation(Coin coin, OrganisationTransactionClient organisationTransactionClient){
+    private VerticalLayout buyFoOrganisation(Coin coin, UserClient userClient, OrganisationTransactionClient organisationTransactionClient){
         VerticalLayout layout = new VerticalLayout();
         TextField money = new TextField("money");
-        String grouoName = VaadinSession.getCurrent().getAttribute(User.class).getGroup_name();
+        User user = userClient.getUser(VaadinSession.getCurrent().getAttribute(User.class).getId());
         Button buy = new Button("Buy crypto", event -> {
-            OrganisationTransaction transaction = new OrganisationTransaction(grouoName, coin.getSymbol(), null, new BigDecimal(money.getValue()));
-            organisationTransactionClient.buyCrypto(transaction);
-            Notification.show("Crypto bought!");
+            try {
+                OrganisationTransaction transaction = new OrganisationTransaction(user.getId(), user.getGroup_name(), coin.getSymbol(), null, new BigDecimal(money.getValue()));
+                organisationTransactionClient.buyCrypto(transaction);
+                Notification.show("Crypto bought!");
+            } catch (Exception e) {
+                Notification.show("Something went wrong");
+            }
         });
         layout.add(money, buy);
         return layout;
