@@ -43,7 +43,12 @@ public class RegisterView extends VerticalLayout {
                         Notification.show("Enter an email");
                     } else {
                         try {
-                            User user = new User(username.getValue(), email.getValue(), password.getValue(), false, new BigDecimal(10000));
+                            User user = User.builder()
+                                    .name(username.getValue())
+                                    .email(email.getValue())
+                                    .password(password.getValue())
+                                    .adminStatus(false)
+                                    .money(new BigDecimal(10000)).build();
                             userClient.createUser(user);
                             UI.getCurrent().navigate("");
                         } catch (Exception e) {

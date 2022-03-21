@@ -30,11 +30,4 @@ public class OrganisationTransaction {
 
     private BigDecimal worth_now;
 
-    public OrganisationTransaction(Long user_id, String organisation_name, String crypto_symbol, BigDecimal crypto_amount, BigDecimal money) {
-        this.user_id = user_id;
-        this.organisation_name = organisation_name;
-        this.crypto_symbol = crypto_symbol;
-        this.crypto_amount = crypto_amount;
-        this.money = money;
-    }
 }

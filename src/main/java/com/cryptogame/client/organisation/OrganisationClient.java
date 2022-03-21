@@ -59,8 +59,7 @@ public class OrganisationClient {
         return restTemplate.postForObject(url, organisation, Organisation.class);
     }
 
-    public void sendMoneyToOrganisation(BigDecimal amount){
-        User user = VaadinSession.getCurrent().getAttribute(User.class);
+    public void sendMoneyToOrganisation(User user, BigDecimal amount){
         Organisation organisation = getOrganisationByName(user.getGroup_name());
         URI url = UriComponentsBuilder
                 .fromHttpUrl(config.getBackApi() + "/user/organisation/")

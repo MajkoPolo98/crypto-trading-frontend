@@ -21,7 +21,7 @@ import java.util.Arrays;
 @Route("organisation/creator")
 public class OrganisationCreatorView extends VerticalLayout {
     public OrganisationCreatorView(OrganisationClient organisationClient, UserClient userClient) {
-        TextField username = new TextField("Username");
+        TextField organisation_name = new TextField("Username");
 
         MainMenu menu = new MainMenu();
 
@@ -29,11 +29,13 @@ public class OrganisationCreatorView extends VerticalLayout {
                 menu.createMenuBar(userClient),
 
                 new H1("Create organisation"),
-                username,
+                organisation_name,
                 new Button("Register", event -> {
                     try {
                         User user = VaadinSession.getCurrent().getAttribute(User.class);
-                        Organisation organisation = new Organisation(username.getValue(), BigDecimal.ZERO);
+                        Organisation organisation = Organisation.builder()
+                                .organisation_name(organisation_name.getValue())
+                                .organisation_funds(BigDecimal.ZERO).build();
                         organisation.setUsers(Arrays.asList(user.getId()));
 
                         organisationClient.createOrganisation(organisation);

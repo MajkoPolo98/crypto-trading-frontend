@@ -55,7 +55,10 @@ public class MainView extends VerticalLayout {
         User loggedUser = VaadinSession.getCurrent().getAttribute(User.class);
         Button buy = new Button("Buy crypto", event -> {
             try {
-                UserTransaction transaction = new UserTransaction(loggedUser.getId(), coin.getSymbol(), null, new BigDecimal(money.getValue()));
+                UserTransaction transaction = UserTransaction.builder()
+                        .user_id(loggedUser.getId())
+                        .crypto_symbol(coin.getSymbol())
+                        .money(new BigDecimal(money.getValue())).build();
                 userTransactionClient.buyCrypto(transaction);
                 Notification.show("Crypto bought!");
             } catch (Exception e) {
@@ -72,7 +75,11 @@ public class MainView extends VerticalLayout {
         User user = userClient.getUser(VaadinSession.getCurrent().getAttribute(User.class).getId());
         Button buy = new Button("Buy crypto", event -> {
             try {
-                OrganisationTransaction transaction = new OrganisationTransaction(user.getId(), user.getGroup_name(), coin.getSymbol(), null, new BigDecimal(money.getValue()));
+                OrganisationTransaction transaction = OrganisationTransaction.builder().user_id(user.getId())
+                        .organisation_name(user.getGroup_name())
+                        .crypto_symbol(coin.getSymbol())
+                        .money(new BigDecimal(money.getValue())).build();
+
                 organisationTransactionClient.buyCrypto(transaction);
                 Notification.show("Crypto bought!");
             } catch (Exception e) {

@@ -40,11 +40,4 @@ public class User {
         return crypto;
     }
 
-    public User(String userName, String email, String password, boolean adminStatus, BigDecimal money) {
-        this.name = userName;
-        this.email = email;
-        this.password = password;
-        this.adminStatus = adminStatus;
-        this.money = money;
-    }
 }

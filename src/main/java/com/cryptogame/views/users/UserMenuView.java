@@ -72,7 +72,10 @@ public class UserMenuView extends VerticalLayout {
         TextField cryptoAmount = new TextField("crypto amount");
         User loggedUser = userClient.getUser(VaadinSession.getCurrent().getAttribute(User.class).getId());
         Button buy = new Button("Sell crypto", event -> {
-            UserTransaction transaction = new UserTransaction(loggedUser.getId(), symbol, new BigDecimal(cryptoAmount.getValue()), null);
+            UserTransaction transaction = UserTransaction.builder()
+                    .user_id(loggedUser.getId())
+                    .crypto_symbol(symbol)
+                    .crypto_amount(new BigDecimal(cryptoAmount.getValue())).build();
             userTransactionClient.sellCrypto(transaction);
             UI.getCurrent().getPage().reload();
             Notification.show("Crypto sold!");

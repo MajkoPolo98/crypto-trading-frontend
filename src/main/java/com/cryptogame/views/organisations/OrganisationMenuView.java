@@ -42,7 +42,7 @@ public class OrganisationMenuView extends VerticalLayout {
         TextField moneyAmount = new TextField();
         Button sendMoneyButton = new Button("Send to organisation", event -> {
             try {
-                organisationClient.sendMoneyToOrganisation(new BigDecimal(moneyAmount.getValue()));
+                organisationClient.sendMoneyToOrganisation(user, new BigDecimal(moneyAmount.getValue()));
                 Notification.show("Money sent");
                 UI.getCurrent().getPage().reload();
             } catch (Exception e){
@@ -59,7 +59,7 @@ public class OrganisationMenuView extends VerticalLayout {
         walletGrid.addColumn(CryptoInWallet::getSymbol).setHeader("Symbol");
         walletGrid.addColumn(CryptoInWallet::getAmount).setHeader("Amount owned");
         walletGrid.addColumn(crypto -> organisationCoinMap.get(crypto.getSymbol())).setHeader("Crypto price");
-        walletGrid.addComponentColumn(crypto -> sellForOrganisation(crypto.getSymbol(), organisationTransactionClient));
+        walletGrid.addComponentColumn(crypto -> sellForOrganisation(user, crypto.getSymbol(), organisationTransactionClient));
         walletGrid.setItems(organisation.crypto());
         add(walletGrid);
 
@@ -76,18 +76,25 @@ public class OrganisationMenuView extends VerticalLayout {
         add(transactionGrid);
     }
 
-    private VerticalLayout sellForOrganisation(String symbol, OrganisationTransactionClient organisationTransactionClient){
+    private VerticalLayout sellForOrganisation(User loggedUser, String symbol, OrganisationTransactionClient organisationTransactionClient){
 
         VerticalLayout layout = new VerticalLayout();
         TextField cryptoAmount = new TextField("crypto amount");
-        User loggedUser = VaadinSession.getCurrent().getAttribute(User.class);
-        Button buy = new Button("Sell crypto", event -> {
-            OrganisationTransaction transaction = new OrganisationTransaction(loggedUser.getId(), loggedUser.getGroup_name(), symbol, new BigDecimal(cryptoAmount.getValue()), null);
+        Button sell = new Button("Sell crypto", event -> {
+
+            System.out.println("Logged User: " + loggedUser.getName());
+            System.out.println("Group name: " + loggedUser.getGroup_name());
+
+            OrganisationTransaction transaction = OrganisationTransaction.builder().user_id(loggedUser.getId())
+                    .organisation_name(loggedUser.getGroup_name())
+                    .crypto_symbol(symbol)
+                    .crypto_amount(new BigDecimal(cryptoAmount.getValue())).build();
+
             organisationTransactionClient.sellCrypto(transaction);
             UI.getCurrent().getPage().reload();
             Notification.show("Crypto sold!");
         });
-        layout.add(cryptoAmount, buy);
+        layout.add(cryptoAmount, sell);
         return layout;
     }
 }
