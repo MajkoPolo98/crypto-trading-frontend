@@ -42,8 +42,6 @@ public class UserMenuView extends VerticalLayout {
         Text moneyAvailable = new Text("Money available: " + user.getMoney());
         add(moneyAvailable);
 
-        Text text = new Text("Wallet");
-        add(text);
 
         Grid<CryptoInWallet> walletGrid = new Grid<>();
         walletGrid.addColumn(CryptoInWallet::getSymbol).setHeader("Symbol");

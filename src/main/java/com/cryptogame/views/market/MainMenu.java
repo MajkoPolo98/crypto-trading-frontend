@@ -35,7 +35,6 @@ public class MainMenu extends VerticalLayout {
         setAlignItems(Alignment.CENTER);
         VerticalLayout layout = new VerticalLayout();
         MenuBar menuBar = new MenuBar();
-        Text selected = new Text("");
 
         menuBar.addItem("Market", event -> UI.getCurrent().navigate("Market"));
 

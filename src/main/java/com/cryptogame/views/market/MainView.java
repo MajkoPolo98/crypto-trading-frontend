@@ -1,15 +1,19 @@
 package com.cryptogame.views.market;
 
 import com.cryptogame.client.coin.CoinClient;
+import com.cryptogame.client.organisation.OrganisationClient;
 import com.cryptogame.client.organisation.OrganisationTransactionClient;
 import com.cryptogame.client.user.UserClient;
 import com.cryptogame.client.user.UserTransactionClient;
 import com.cryptogame.domain.*;
+import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
@@ -17,6 +21,7 @@ import com.vaadin.flow.server.VaadinSession;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Route("Market")
 public class MainView extends VerticalLayout {
@@ -24,9 +29,25 @@ public class MainView extends VerticalLayout {
 
     private MainMenu mainMenu = new MainMenu();
 
-    public MainView(CoinClient coinClient, UserClient userClient, UserTransactionClient userTransactionClient, OrganisationTransactionClient organisationTransactionClient) {
+    public MainView(CoinClient coinClient, UserClient userClient, OrganisationClient organisationClient, UserTransactionClient userTransactionClient, OrganisationTransactionClient organisationTransactionClient) {
         setAlignItems(Alignment.CENTER);
         add(mainMenu.createMenuBar(userClient));
+
+
+        User user = userClient.getUser(VaadinSession.getCurrent().getAttribute(User.class).getId());
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        Text userAvailableMoney = new Text("Money available for user: " + user.getMoney());
+        horizontalLayout.add(userAvailableMoney);
+
+        HorizontalLayout horizontalLayoutTwo = new HorizontalLayout();
+        if(userClient.getUser(VaadinSession.getCurrent().getAttribute(User.class).getId()).getGroup_name() != null) {
+            Organisation organisation = organisationClient.getOrganisationByName(user.getGroup_name());
+            Text organisationAvailableMoney = new Text("Money available for organisation: " + organisation.getOrganisation_funds());
+            horizontalLayoutTwo.add(organisationAvailableMoney);
+        }
+
+        add(horizontalLayout);
+        add(horizontalLayoutTwo);
 
         Grid<Coin> grid = new Grid<>(Coin.class);
 
@@ -60,6 +81,7 @@ public class MainView extends VerticalLayout {
                         .crypto_symbol(coin.getSymbol())
                         .money(new BigDecimal(money.getValue())).build();
                 userTransactionClient.buyCrypto(transaction);
+                UI.getCurrent().getPage().reload();
                 Notification.show("Crypto bought!");
             } catch (Exception e) {
                 Notification.show("Something went wrong");

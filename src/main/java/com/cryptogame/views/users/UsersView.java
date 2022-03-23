@@ -16,7 +16,6 @@ public class UsersView extends VerticalLayout {
         grid.removeAllColumns();
         grid.addColumn(User::getName).setHeader("User name");
         grid.addColumn(User::getValue).setHeader("User value");
-        grid.addColumn(User::getWallet).setHeader("USER TEST");
         grid.addColumn(User::getMoney).setHeader("User free funds");
         grid.addColumn(User::getGroup_name).setHeader("User organisation");
 
