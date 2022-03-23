@@ -21,7 +21,6 @@ import com.vaadin.flow.server.VaadinSession;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 @Route("Market")
 public class MainView extends VerticalLayout {
@@ -67,6 +66,41 @@ public class MainView extends VerticalLayout {
         List<Coin> coinList = coinClient.getCoins();
         grid.setItems(coinList);
         add(grid);
+
+
+        Text anotherCrypto = new Text("Find another crypto");
+        TextField inputSymbol = new TextField("Input crypto symbol");
+        Grid<Coin> gridSearch = new Grid<>(Coin.class);
+
+        gridSearch.setColumns("symbol", "name", "price");
+        gridSearch.addComponentColumn(coin -> {
+            setAlignItems(Alignment.CENTER);
+            Image image = new Image(coin.getLogo_url(), "coin image");
+            image.setHeight(200, Unit.PIXELS);
+            image.setHeight(200, Unit.PIXELS);
+            return image;
+        }).setHeader("image");
+        gridSearch.addComponentColumn(coin -> buyForUser(coin, userTransactionClient)).setHeader("Buy crypto for yourself");
+        if(userClient.getUser(VaadinSession.getCurrent().getAttribute(User.class).getId()).getGroup_name() != null){
+            gridSearch.addComponentColumn(coin -> buyFoOrganisation(coin, userClient, organisationTransactionClient)).setHeader("Buy crypto for organisation");
+        }
+
+        Button button = new Button("Search", event -> {
+            try {
+                gridSearch.setItems(coinClient.getCoin(inputSymbol.getValue()));
+            } catch (Exception e){
+                Notification.show("Couldn't find crypto");
+            }
+        });
+
+        add(new HorizontalLayout());
+        add(new HorizontalLayout());
+        add(new HorizontalLayout());
+        add(anotherCrypto);
+        add(inputSymbol);
+        add(button);
+        add(gridSearch);
+
 
     }
 

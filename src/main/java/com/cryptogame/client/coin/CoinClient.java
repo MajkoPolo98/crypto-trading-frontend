@@ -42,11 +42,4 @@ public class CoinClient {
         return response.orElse(new Coin());
     }
 
-    public List<Coin> getSelectedCoins(List<String> symbols){
-        URI url = UriComponentsBuilder
-                .fromHttpUrl(config.getBackApi() + "/stock")
-                .build().encode().toUri();
-        Optional<ArrayList<Coin>> response = Optional.ofNullable(restTemplate.postForObject(url, symbols, ArrayList.class));
-        return response.orElse(new ArrayList<>());
-    }
 }
