@@ -87,7 +87,7 @@ public class MainView extends VerticalLayout {
 
         Button button = new Button("Search", event -> {
             try {
-                gridSearch.setItems(coinClient.getCoin(inputSymbol.getValue()));
+                gridSearch.setItems(coinClient.getCoin(inputSymbol.getValue().toUpperCase()));
             } catch (Exception e){
                 Notification.show("Couldn't find crypto");
             }
